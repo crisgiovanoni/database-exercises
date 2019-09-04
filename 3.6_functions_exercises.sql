@@ -12,7 +12,7 @@ where last_name like 'e%e';
 
 -- For your query of employees born on Christmas and hired in the 90s, use datediff() to find how many days they have been working at the company (Hint: You will also need to use NOW() or CURDATE())
 
-select datediff(now(), hire_date)
+select emp_no, first_name, last_name, datediff(now(), hire_date)
 from employees
 where (hire_date between '1990-01-01' and '1999-12-31' and birth_date like '%-12-25')
 order by birth_date, hire_date DESC;
