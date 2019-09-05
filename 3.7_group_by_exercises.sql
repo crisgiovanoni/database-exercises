@@ -41,9 +41,9 @@ group by username
 order by count(*) desc;
 
 -- How many duplicate usernames are there?
-
+       
 select concat(lower(substr(first_name, 1, 1)), lower(substr(last_name, 1, 4)), '_', substr(birth_date,6,2), 
-substr(year(birth_date), 3, 2)) as username, count(*) as no. of duplicates
+substr(year(birth_date), 3, 2)) as username, count(*) as duplicates
 from employees
 group by username
 having count(*) > 1
