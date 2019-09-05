@@ -20,11 +20,11 @@ select distinct last_name
 from employees
 where last_name like '%q%' and last_name not like '%qu%';
 
--- Add a COUNT() to your results and use ORDER BY to make it easier to find employees whose unusual name is shared with others.
-select concat(first_name, " ", last_name) as full_name, count(*)
+-- Add a COUNT() to your results and use ORDER BY to make it easier to find employees whose unusual name is shared with others.
+select distinct last_name, count(*)
 from employees
-group by full_name
-order by count(*) DESC;
+where last_name like '%q%' and last_name not like '%qu%'
+group by last_name;
 
 -- Update your query for 'Irena', 'Vidya', or 'Maya'. Use COUNT(*) and GROUP BY to find the number of employees for each gender with those names. Your results should be:
 
@@ -50,7 +50,3 @@ having count(*) > 1
 order by count(*) desc;
 
 -- There are 13,251 usernames with duplicates.
-
-
-
-
