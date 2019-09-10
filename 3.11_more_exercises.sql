@@ -275,4 +275,215 @@ group by ge.name
 order by sum(p.amount) desc
 limit 5;
 
+/* SELECT statements
+1. Select all columns from the actor table.
+2. Select only the last_name column from the actor table.
+3. Select only the following columns from the film table. **Nothing specified */
+
+select *
+from actor;
+
+select last_name
+from actor;
+
+/* DISTINCT operator
+1. Select all distinct (different) last names from the actor table.
+2. Select all distinct (different) postal codes from the address table.
+Select all distinct (different) ratings from the film table. */
+
+select distinct last_name
+from actor;
+
+select distinct postal_code
+from address;
+
+select distinct rating
+from film;
+
+/* WHERE clause
+1. Select the title, description, rating, movie length columns from the films table that last 3 hours or longer.
+2. Select the payment id, amount, and payment date columns from the payments table for payments made on or after 05/27/2005.
+3. Select the primary key, amount, and payment date columns from the payment table for payments made on 05/27/2005.
+4. Select all columns from the customer table for rows that have a last names beginning with S and a first names ending with N.
+5. Select all columns from the customer table for rows where the customer is inactive or has a last name beginning with "M".
+6. Select all columns from the category table for rows where the primary key is greater than 4 and the name field begins with either C, S or T.
+7. Select all columns minus the password column from the staff table for rows that contain a password.
+8. Select all columns minus the password column from the staff table for rows that do not contain a password. */
+
+select title, description, rating, length
+from film
+where length > 180;
+
+select payment_id, amount, payment_date
+from payment
+where payment_date >= '2005-05-27';
+
+select payment_id, amount, payment_date
+from payment
+where payment_date = '2005-05-27';
+
+select *
+from customer
+where last_name like 's%' and first_name like '%n';
+
+select *
+from customer
+where active = 0 or last_name like 'm%';
+
+select *
+from category
+where category_id > 4 and category.name in ('C%', 'S%', 'T%');
+
+select staff_id, address_id, store_id, first_name, last_name, address_id, picture, email, store_id, active, username, last_update
+from staff
+where password IS NOT NULL;
+
+select staff_id, address_id, store_id, first_name, last_name, address_id, picture, email, store_id, active, username, last_update
+from staff
+where password IS NULL;
+
+/* IN operator
+1. Select the phone and district columns from the address table for addresses in California, England, Taipei, or West Java.
+2. Select the payment id, amount, and payment date columns from the payment table for payments made on 05/25/2005, 05/27/2005, and 05/29/2005. (Use the IN operator and the DATE function, instead of the AND operator as in previous exercises.)
+3. Select all columns from the film table for films rated G, PG-13 or NC-17.
+
+BETWEEN operator
+1. Select all columns from the payment table for payments made between midnight 05/25/2005 and 1 second before midnight 05/26/2005.
+2. Select the following columns from the film table for films where the length of the description is between 100 and 120.
+Hint: total_rental_cost = rental_duration * rental_rate
+
+LIKE operator
+1. Select the following columns from the film table for rows where the description begins with "A Thoughtful".
+2. Select the following columns from the film table for rows where the description ends with the word "Boat".
+3. Select the following columns from the film table where the description contains the word "Database" and the length of the film is greater than 3 hours. */
+
+select phone, district
+from address
+where district in ('California', 'England', 'Taipei', 'West Java');
+
+select payment_id, amount, payment_date
+from payment
+where date(payment_date) in ('2005-05-25','2005-05-27','2005-05-29');
+
+select *
+from payment
+where payment_date between '2005-05-25 24:00:00' and '2005-05-26 23:59:59';
+
+select *
+from film
+where length(description) between 100 and 200;
+
+select *
+from film
+where description like 'A Thoughtful%';
+
+select *
+from film
+where description like '%Boat';
+
+select *
+from film
+where description like '%Database%' and length > 180;
+
+/* LIMIT Operator
+1. Select all columns from the payment table and only include the first 20 rows.
+2. Select the payment date and amount columns from the payment table for rows where the payment amount is greater than 5, and only select rows whose zero-based index in the result set is between 1000-2000.
+3. Select all columns from the customer table, limiting results to those where the zero-based index is between 101-200. */
+
+select *
+from payment
+limit 20;
+
+select payment_date, amount
+from payment
+where amount > 5
+limit 1000
+offset 999;
+
+select *
+from customer
+limit 200
+offset 100;
+
+/*ORDER BY statement
+1. Select all columns from the film table and order rows by the length field in ascending order.
+2. Select all distinct ratings from the film table ordered by rating in descending order.
+3. Select the payment date and amount columns from the payment table for the first 20 payments ordered by payment amount in descending order.
+4. Select the title, description, special features, length, and rental duration columns from the film table for the first 10 films with behind the scenes footage under 2 hours in length and a rental duration between 5 and 7 days, ordered by length in descending order. */
+
+select *
+from film
+order by length;
+
+select distinct rating
+from film
+order by rating desc;
+
+select payment_date, amount
+from payment
+order by amount desc
+limit 20;
+
+select title, description, special_features, length, rental_duration
+from film
+where length < 120 and special_features like '%Behind The Scenes%' and rental_duration between 5 and 7
+order by length desc
+limit 10;
+
+/* 
+JOINS
+1. Select customer first_name/last_name and actor first_name/last_name columns from performing a left join between the customer and actor column on the last_name column in each table. (i.e. customer.last_name = actor.last_name)
+• Label customer first_name/last_name columns as customer_first_name/customer_last_name
+• Label actor first_name/last_name columns in a similar fashion.
+• returns correct number of records: 599*/
+
+select c.first_name as customer_first_name, c.last_name as customer_last_name, a.first_name as actor_first_name, a.last_name as actor_last_name
+from customer as c
+left join actor as a
+on c.last_name = a.last_name;
+
+/*2. Select the customer first_name/last_name and actor first_name/last_name columns from performing a /right join between the customer and actor column on the last_name column in each table. (i.e. customer.last_name = actor.last_name)
+• returns correct number of records: 200 */
+
+select c.first_name as customer_first_name, c.last_name as customer_last_name
+from customer as c
+right join actor as a
+on c.last_name = a.last_name;
+
+/*3. Select the customer first_name/last_name and actor first_name/last_name columns from performing an inner join between the customer and actor column on the last_name column in each table. (i.e. customer.last_name = actor.last_name)
+• returns correct number of records: 43*/
+
+select c.first_name as customer_first_name, c.last_name as customer_last_name, a.first_name as actor_first_name, a.last_name as actor_last_name
+from customer as c
+join actor as a
+on c.last_name = a.last_name;
+
+/*48. Select the city name and country name columns from the city table, performing a left join with the country table to get the country name column.
+• Returns correct records: 600*/
+
+select ci.city, cn.country
+from city as ci
+left join country as cn using(country_id);
+
+/*5. Select the title, description, release year, and language name columns from the film table, performing a left join with the language table to get the "language" column.
+• Label the language.name column as "language"
+• Returns 1000 rows*/
+
+select f.title, f.description, f.release_year, l.name
+from film as f
+left join language as l
+using(language_id);
+
+/*6. Select the first_name, last_name, address, address2, city name, district, and postal code columns from the staff table, performing 2 left joins with the address table then the city table to get the address and city related columns.
+• returns correct number of rows: 2 */
+
+select s.first_name, s.last_name, a.address, a.address2, ci.city, a.district, a.postal_code
+from staff as s
+left join address as a
+using(address_id)
+left join city as ci
+using(city_id)
+
+
+
 
